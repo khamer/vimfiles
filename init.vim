@@ -6,32 +6,50 @@
 """ Plugins
 call plug#begin(stdpath('data') . '/plugged')
 
-Plug 'tpope/vim-sensible'
+""" Essential
+Plug 'editorconfig/editorconfig-vim'            " Indent handling
+Plug 'junegunn/fzf.vim'                         " Opening files
+Plug 'kamykn/spelunker.vim'                     " Much better spell checking
+Plug 'mattn/emmet-vim'                          " Essential shorthand for html/css
+Plug 'mhinz/vim-startify'                       " Very nice launch screen
+Plug 'mileszs/ack.vim'                          " Much better than :grep
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " The best option for completion in 2020
+Plug 'sheerun/vim-polyglot'                     " More filetype support
+Plug 'tpope/vim-sensible'                       " Better defaults
 
-Plug 'editorconfig/editorconfig-vim'
-Plug 'junegunn/fzf.vim'
+""" Sometimes useful
+Plug 'itchyny/lightline.vim'                    " More visual modes - just trying it out
+Plug 'liuchengxu/vim-clap'                      " Only here because :Clap colors has previews
+Plug 'liuchengxu/vim-which-key'                 " Just for fun
+Plug 'simnalamburt/vim-mundo'                   " Better undo, I don't use this much.
+Plug 'voldikss/vim-floaterm'                    " Cool terminal within vim
 
-Plug 'sheerun/vim-polyglot'
-
-Plug 'mattn/emmet-vim'
-Plug 'mileszs/ack.vim'
-Plug 'mhinz/vim-startify'
-Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'liuchengxu/vim-which-key'
-
-Plug 'kkoomen/vim-doge'
-
+""" Colorschemes
+Plug 'ajh17/Spacegray.vim'
+Plug 'altercation/vim-colors-solarized'
 Plug 'arcticicestudio/nord-vim'
+Plug 'https://gitlab.com/protesilaos/tempus-themes-vim.git'
+Plug 'jaredgorski/spacecamp'
+Plug 'joshdick/onedark.vim'
+Plug 'morhetz/gruvbox'
+Plug 'nanotech/jellybeans.vim'
+Plug 'sjl/badwolf'
+Plug 'tyrannicaltoucan/vim-deep-space'
+Plug 'chuling/ci_dark'
+Plug 'ayu-theme/ayu-vim'
+Plug 'jacoborus/tender.vim'
 
 call plug#end()
+
+""" Additional path for color themes
+set rtp+=~/Code/base16-builder-php/templates/vim
 
 """ Basic Settings
 set number ignorecase smartcase undofile list formatoptions+=nj
 set fillchars=vert:\ ,fold:\  listchars=tab:⎸\ ,nbsp:⎕
 set linebreak showbreak=↪\  breakindent breakindentopt=shift:-2
 set backupdir=~/.vim/backup directory=~/.vim/swap
+set wildmode=longest:full
 
 set termguicolors
 let &t_Cs = "\e[4:3m"
@@ -40,12 +58,24 @@ let &t_Ce = "\e[4:0m"
 let g:nord_cursor_line_number_background = 1
 let g:nord_bold_vertical_split_line = 1
 let g:nord_italic_comments = 1
-colorscheme nord
+let g:deepspace_italics = 1
+let g:gruvbox_italic = 1
+let g:onedark_terminal_italics = 1
+let g:spacegray_underline_search = 1
+let g:spacegray_use_italics = 1
 
-set guifont=Source\ Code\ Pro\ 11
+"colorscheme base16-horizon-terminal-dark
+colorscheme tender
+let g:lightline = { 'colorscheme': 'tender' }
+
+" Base16 Specific
+hi Comment cterm=italic gui=italic
+
+set guifont=Input\ Regular\ 9 " This is actually Input Medium, with bold showing as Input Black
 set guioptions-=mrLtT
 set mouse=a
 
+" Tweaking netrw; still not happy with it.
 let g:netrw_banner = 0
 let g:netrw_liststyle = 0
 let g:netrw_browse_split = 4
@@ -83,43 +113,16 @@ let g:doge_filesystem_aliases = {'javascript': ['vue']}
 " Startify
 let g:startify_change_to_dir = 0
 let g:startify_change_to_vcs_root = 1
+autocmd User Startified setlocal buflisted
+autocmd User Startified nmap <buffer> f <leader>f
+let g:startify_fortune_use_unicode = 1
+
+
+
+" Floaterm
+let g:floaterm_position = 'center'
+let g:floaterm_width = 0.9
 
 
 
 runtime keybindings.vim
-
-autocmd FileType defx call s:defx_my_settings()
-function! s:defx_my_settings() abort
-    " Define mappings
-    nnoremap <silent><buffer><expr> <CR> defx#do_action('drop')
-    nnoremap <silent><buffer><expr> c defx#do_action('copy')
-    nnoremap <silent><buffer><expr> m defx#do_action('move')
-    nnoremap <silent><buffer><expr> p defx#do_action('paste')
-    nnoremap <silent><buffer><expr> l defx#do_action('drop')
-    nnoremap <silent><buffer><expr> E defx#do_action('open', 'vsplit')
-    nnoremap <silent><buffer><expr> P defx#do_action('open', 'pedit')
-    nnoremap <silent><buffer><expr> o defx#do_action('open_or_close_tree')
-    nnoremap <silent><buffer><expr> K defx#do_action('new_directory')
-    nnoremap <silent><buffer><expr> N defx#do_action('new_file')
-    nnoremap <silent><buffer><expr> M defx#do_action('new_multiple_files')
-    nnoremap <silent><buffer><expr> C defx#do_action('toggle_columns', 'mark:indent:icon:filename:type:size:time')
-    nnoremap <silent><buffer><expr> S defx#do_action('toggle_sort', 'time')
-    nnoremap <silent><buffer><expr> d defx#do_action('remove')
-    nnoremap <silent><buffer><expr> r defx#do_action('rename')
-    nnoremap <silent><buffer><expr> ! defx#do_action('execute_command')
-    nnoremap <silent><buffer><expr> x defx#do_action('execute_system')
-    nnoremap <silent><buffer><expr> yy defx#do_action('yank_path')
-    nnoremap <silent><buffer><expr> . defx#do_action('toggle_ignored_files')
-    nnoremap <silent><buffer><expr> ; defx#do_action('repeat')
-    nnoremap <silent><buffer><expr> h defx#do_action('cd', ['..'])
-    nnoremap <silent><buffer><expr> <backspace> defx#do_action('cd', ['..'])
-    nnoremap <silent><buffer><expr> ~ defx#do_action('cd')
-    nnoremap <silent><buffer><expr> q defx#do_action('quit')
-    nnoremap <silent><buffer><expr> <Space> defx#do_action('toggle_select') . 'j'
-    nnoremap <silent><buffer><expr> * defx#do_action('toggle_select_all')
-    nnoremap <silent><buffer><expr> j line('.') == line('$') ? 'gg' : 'j'
-    nnoremap <silent><buffer><expr> k line('.') == 1 ? 'G' : 'k'
-    nnoremap <silent><buffer><expr> <C-l> defx#do_action('redraw')
-    nnoremap <silent><buffer><expr> <C-g> defx#do_action('print')
-    nnoremap <silent><buffer><expr> cd defx#do_action('change_vim_cwd')
-endfunction

@@ -10,9 +10,15 @@ nnoremap <c-l> <c-w>l
 nnoremap <c-pageup> :tabprevious<CR>
 nnoremap <c-pagedown> :tabnext<CR>
 
+" fast swap buffers
+nnoremap <silent> <C-n> :<C-u>exe v:count ? v:count . 'b' : 'b' . (bufloaded(0) ? '#' : 'n')<CR>
+
 " Better indenting.
 vnoremap > >gv
 vnoremap < <gv
+
+" Dismiss search highlighting
+nnoremap <silent> <Leader><Space> :nohlsearch<CR>
 
 " Close all buffers, panes, etc.
 nnoremap <silent> <leader>1 :bufdo bd<CR>:Startify<CR>
@@ -47,19 +53,20 @@ function! s:Find_root()
     endif
 endfunction
 
-nnoremap <silent> <Leader><Space> :nohlsearch<CR>
 nnoremap <leader>f :call <sid>Find_root()<CR>
 nnoremap <leader>F :Files<CR>
 nnoremap <leader>l :Lines<CR>
 nnoremap <leader>n :Files ~/Documents/notes<CR>
 nnoremap <silent> <leader>p :call fzf#run({'dir': '$HOME/Code', 'source': 'find . -maxdepth 1 -type d -printf "%f\n" \| sort -r', 'sink': 'cd'})<CR>
-nnoremap <leader>c :Colors<CR>
-"nnoremap <leader>t :NERDTreeToggle<CR>
-"nnoremap <leader>t :Lex<CR>
-nnoremap <leader>t :Defx -split=vertical -winwidth=30 -direction=topleft -toggle<CR>
-"nnoremap <leader>x :exec 'NERDTree ' . stdpath('config')<CR>
-"nnoremap <leader>x :exec 'Lex ' . stdpath('config')<CR>
-nnoremap <leader>x :Defx -split=vertical -winwidth=30 -direction=topleft ~/.config/nvim/ -toggle<CR>
+
+
+" CoC
+nnoremap <leader>x :CocCommand explorer ~/.config/nvim<CR>
+nnoremap <leader>b :CocCommand explorer<CR>
+
+
+" Clap
+nnoremap <leader>c :Clap colors<CR>
 
 
 " which-key
@@ -80,3 +87,11 @@ let g:which_key_map = {
     \ 't': 'toggle sidebar',
     \ 'x': 'settings'
     \ }
+
+
+" floaterm
+nnoremap <leader>E :FloatermNew<CR>
+nnoremap <leader>Ej :FloatermPrev<CR>
+nnoremap <leader>Ek :FloatermNext<CR>
+nnoremap <leader>e :FloatermToggle<CR>
+nnoremap <leader>t :FloatermNew ranger<CR>
