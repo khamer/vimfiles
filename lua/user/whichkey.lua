@@ -79,13 +79,14 @@ local opts = {
 }
 
 local mappings = {
-  F = { "<cmd>Telescope live_grep theme=ivy<cr>", "Find Text" },
   R = { "<cmd>UploadFolder<cr>", "Rsync Folder" },
   a = { "<cmd>Alpha<cr>", "Alpha" },
   b = { "<cmd>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<cr>", "Buffers", },
   c = { "<cmd>Bdelete!<CR>", "Close Buffer" },
   e = { "<cmd>NvimTreeToggle<cr>", "Explorer" },
   f = { "<cmd>lua require('telescope.builtin').find_files()<cr>", "Find files", },
+  F = { "<cmd>lua require('telescope.builtin').find_files({ no_ignore = true })<cr>", "Find files (All)" },
+  d = { "<cmd>lua require('neogen').generate()<cr>", "Generate Docblock" },
   h = { "<cmd>nohlsearch<CR>", "No Highlight" },
   p = { "<cmd>lua require('telescope').extensions.projects.projects()<cr>", "Projects" },
   q = { "<cmd>q!<CR>", "Quit" },
@@ -157,6 +158,7 @@ local mappings = {
   },
   s = {
     name = "Search",
+    g = { "<cmd>Telescope live_grep theme=ivy<cr>", "Live grep" },
     b = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
     c = { "<cmd>Telescope colorscheme<cr>", "Colorscheme" },
     h = { "<cmd>Telescope help_tags<cr>", "Find Help" },
@@ -181,3 +183,17 @@ local mappings = {
 
 which_key.setup(setup)
 which_key.register(mappings, opts)
+
+which_key.register(
+    {
+        r = { "<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>", "Refactor" },
+        j = { "<Esc><cmd>'<,'>!python -m json.tool<CR>", "Format JSON" }
+    }, {
+        mode = "v",
+        prefix = "<leader>",
+        buffer = nil,
+        silent = true,
+        noremap = true,
+        nowait = true
+    }
+)

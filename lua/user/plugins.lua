@@ -82,6 +82,7 @@ return packer.startup(function(use)
     use { "williamboman/mason-lspconfig.nvim" }
     use { "jose-elias-alvarez/null-ls.nvim" } -- for formatters and linters
     use { "RRethy/vim-illuminate" }
+    use { "jayp0521/mason-null-ls.nvim" }
 
     -- Telescope
     use { "nvim-telescope/telescope.nvim" }
@@ -97,6 +98,15 @@ return packer.startup(function(use)
 
     -- Colorizer
     use { "NvChad/nvim-colorizer.lua" }
+
+    -- mini
+    use { 'echasnovski/mini.nvim' }
+
+    -- refactoring
+    use { "ThePrimeagen/refactoring.nvim" }
+
+    -- docblocks
+    use { "danymat/neogen", tag = "*" }
 
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins

@@ -18,6 +18,8 @@ null_ls.setup({
         diagnostics.php,
         code_actions.eslint_d,
         diagnostics.eslint_d,
+        -- diagnostics.phpstan,
+        diagnostics.psalm,
 	},
 })
 

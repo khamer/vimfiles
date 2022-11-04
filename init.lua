@@ -19,5 +19,7 @@ require "user.alpha"
 require "user.whichkey"
 require "user.autocommands"
 require "user.nvim-colorizer"
+require "user.mini"
+require "user.neogen"
 
-vim.cmd "runtime lua/user/indent-text-object.vim"
+-- vim.cmd "runtime lua/user/indent-text-object.vim"
