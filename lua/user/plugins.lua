@@ -92,7 +92,8 @@ return packer.startup(function(use)
     use { "nvim-telescope/telescope-fzf-native.nvim", run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build" }
 
     -- Treesitter
-    use { "nvim-treesitter/nvim-treesitter" }
+    --use { "nvim-treesitter/nvim-treesitter" }
+    use { "theHamsta/nvim-treesitter", branch = "ecma-auto-comment" }
     use { "gbprod/tree-sitter-twig" }
 
     -- Git
@@ -108,7 +109,7 @@ return packer.startup(function(use)
     use { "ThePrimeagen/refactoring.nvim" }
 
     -- docblocks
-    use { "danymat/neogen", tag = "*" }
+    use { "danymat/neogen" }
 
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
