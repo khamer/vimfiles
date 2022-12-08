@@ -21,6 +21,7 @@ require "user.autocommands"
 require "user.nvim-colorizer"
 require "user.mini"
 require "user.neogen"
+require "user.signature"
 require "user.upload"
 
 -- vim.cmd "runtime lua/user/indent-text-object.vim"
