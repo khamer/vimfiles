@@ -111,6 +111,9 @@ return packer.startup(function(use)
     -- docblocks
     use { "danymat/neogen" }
 
+    -- emmet because emmet-ls doesn't seem to want to play nice
+    use { "mattn/emmet-vim" }
+
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
     if PACKER_BOOTSTRAP then
