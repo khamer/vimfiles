@@ -20,6 +20,3 @@ end
 vim.cmd[[ command! UploadFile lua Upload() ]]
 vim.cmd[[ command! UploadFolder lua Upload(vim.fn.expand '%:h') ]]
 vim.cmd[[ command! UploadRoot lua Upload(vim.loop.cwd()) ]]
--- vim.api.nvim_add_user_command('UploadFile', 'lua Upload()')
--- vim.api.nvim_add_user_command('UploadFolder', 'lua Upload(vim.fn.expand \'%:h\')')
--- vim.api.nvim_add_user_command('UploadRoot', 'lua Upload(vim.loop.cwd())')

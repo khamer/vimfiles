@@ -1,24 +1,23 @@
-local opts = { noremap = true, silent = true }
-
-local term_opts = { silent = true }
-
 -- Shorten function name
-local keymap = vim.api.nvim_set_keymap
+local keymap = vim.keymap.set
+-- Silent keymap option
+local opts = { silent = true }
+
+local function defineTextObject(sym)
+    keymap("v", "i" .. sym, ":<C-u>silent! normal! T" .. sym .. "vt" .. sym .. "<CR>", opts)
+    keymap("v", "a" .. sym, ":<C-u>silent! normal! F" .. sym .. "vf" .. sym .. "<CR>", opts)
+    keymap("o", "i" .. sym, ":normal vi" .. sym .. "<CR>", opts)
+    keymap("o", "a" .. sym, ":normal va" .. sym .. "<CR>", opts)
+    keymap("n", "di" .. sym, ":normal va" .. sym .. "c" .. sym .. "<ESC>", opts)
+    keymap("n", "da" .. sym, ":normal va" .. sym .. "c" .. sym .. "<ESC>", opts)
+end
 
 --Remap space as leader key
 keymap("", "<Space>", "<Nop>", opts)
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
 
--- Modes
---   normal_mode = "n",
---   insert_mode = "i",
---   visual_mode = "v",
---   visual_block_mode = "x",
---   term_mode = "t",
---   command_mode = "c",
-
--- Normal --
+-------------------------------------------------------------------------------
+-- NORMAL
+-------------------------------------------------------------------------------
 -- Better window navigation
 keymap("n", "<C-h>", "<C-w>h", opts)
 keymap("n", "<C-j>", "<C-w>j", opts)
@@ -27,13 +26,7 @@ keymap("n", "<C-l>", "<C-w>l", opts)
 
 -- Navigate buffers
 keymap("n", "<C-pageup>", ":bnext<CR>", opts)
-keymap("n", "<S-l>", ":bnext<CR>", opts)
 keymap("n", "<C-pagedown>", ":bprevious<CR>", opts)
-keymap("n", "<S-h>", ":bprevious<CR>", opts)
-
--- Move text up and down
-keymap("n", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
-keymap("n", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
 
 -- Dismiss search highlighting
 keymap("n", "<leader><space>", ":nohlsearch<CR>", opts)
@@ -41,44 +34,72 @@ keymap("n", "<leader><space>", ":nohlsearch<CR>", opts)
 -- Close all buffers, panes, etc
 keymap("n", "<leader>1", ":bufdo Bdelete<CR>:only<CR>", opts)
 
--- Insert --
 
--- Visual --
+-------------------------------------------------------------------------------
+-- VISUAL
+-------------------------------------------------------------------------------
 -- Stay in indent mode
 keymap("v", "<", "<gv", opts)
 keymap("v", ">", ">gv", opts)
 
--- Visual Block --
--- Move text up and down
-keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
-keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
-keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
-keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
+-------------------------------------------------------------------------------
+-- TEXT OBJECTS
+-------------------------------------------------------------------------------
+defineTextObject("#")
+defineTextObject("%")
+defineTextObject("*")
+defineTextObject("+")
+defineTextObject(",")
+defineTextObject("-")
+defineTextObject(".")
+defineTextObject("/")
+defineTextObject(":")
+defineTextObject(";")
+defineTextObject("<bar>")
+defineTextObject("<bslash>")
+defineTextObject("_")
+defineTextObject("`")
 
--- Text objects
-keymap("v", "i/", ":<C-u>silent! normal! T/vt/<CR>", opts)
-keymap("v", "a/", ":<C-u>silent! normal! F/vf/<CR>", opts)
-keymap("v", "i_", ":<C-u>silent! normal! T_vt_<CR>", opts)
-keymap("v", "a_", ":<C-u>silent! normal! F_vf_<CR>", opts)
+function select_indent(around)
+    local start_indent = vim.fn.indent(vim.fn.line('.'))
+    local blank_line_pattern = '^%s*$'
 
-keymap("o", "i/", ":normal vi/<CR>", {})
-keymap("o", "a/", ":normal va/<CR>", {})
-keymap("o", "i_", ":normal vi_<CR>", {})
-keymap("o", "a_", ":normal va_<CR>", {})
-
-keymap("n", "di/", ":normal va/c/<ESC>", {})
-keymap("n", "da/", ":normal va/c/<ESC>", {})
-keymap("n", "di_", ":normal va_c_<ESC>", {})
-keymap("n", "da_", ":normal va_c_<ESC>", {})
-
--- testing
-OpenDiagFloat = function ()
-  for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
-    if vim.api.nvim_win_get_config(winid).zindex then
-      return
+    if string.match(vim.fn.getline('.'), blank_line_pattern) then
+        return
     end
-  end
-  vim.diagnostic.open_float({focusable = false})
+
+    if vim.v.count > 0 then
+        start_indent = start_indent - vim.o.shiftwidth * (vim.v.count - 1)
+        if start_indent < 0 then
+            start_indent = 0
+        end
+    end
+
+    local prev_line = vim.fn.line('.') - 1
+    local prev_blank_line = function(line) return string.match(vim.fn.getline(line), blank_line_pattern) end
+    while prev_line > 0 and (prev_blank_line(prev_line) or vim.fn.indent(prev_line) >= start_indent) do
+        vim.cmd('-')
+        prev_line = vim.fn.line('.') - 1
+    end
+    if around then
+        vim.cmd('-')
+    end
+
+    vim.cmd('normal! 0V')
+
+    local next_line = vim.fn.line('.') + 1
+    local next_blank_line = function(line) return string.match(vim.fn.getline(line), blank_line_pattern) end
+    local last_line = vim.fn.line('$')
+    while next_line <= last_line and (next_blank_line(next_line) or vim.fn.indent(next_line) >= start_indent) do
+        vim.cmd('+')
+        next_line = vim.fn.line('.') + 1
+    end
+    if around then
+        vim.cmd('+')
+    end
 end
 
-vim.cmd("autocmd CursorHold * lua OpenDiagFloat()")
+for _,mode in ipairs({ 'x', 'o' }) do
+    vim.api.nvim_set_keymap(mode, 'ii', ':<c-u>lua select_indent()<cr>', { noremap = true, silent = true })
+    vim.api.nvim_set_keymap(mode, 'ai', ':<c-u>lua select_indent()<cr>', { noremap = true, silent = true })
+end

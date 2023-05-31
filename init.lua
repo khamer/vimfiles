@@ -1,28 +1,25 @@
+require "user.impatient"
 require "user.options"
 require "user.keymaps"
-require "user.plugins"
-require "user.colorscheme"
-require "user.cmp"
-require "user.tabnine"
-require "user.lsp"
-require "user.telescope"
-require "user.gitsigns"
-require "user.treesitter"
-require "user.autopairs"
-require "user.comment"
-require "user.nvim-tree"
-require "user.bufferline"
-require "user.project"
-require "user.impatient"
-require "user.indentline"
-require "user.alpha"
-require "user.whichkey"
-require "user.autocommands"
-require "user.nvim-colorizer"
-require "user.mini"
-require "user.neogen"
-require "user.signature"
 require "user.upload"
 
--- vim.cmd "runtime lua/user/indent-text-object.vim"
-vim.cmd "runtime lua/user/indent-text-object.vim"
+-- folke/lazy.nvim bootstrap
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- folke/lazy.nvim plugins
+require("lazy").setup("plugins")
+require("user.which-keys")
+
+vim.cmd [[ colorscheme tokyonight-storm ]]
+vim.api.nvim_set_hl(0, 'WinSeparator', { fg = "#29a4bd" })
